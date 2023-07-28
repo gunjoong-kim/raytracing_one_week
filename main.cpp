@@ -6,6 +6,7 @@
 #include "material.hpp"
 #include "bvh.hpp"
 #include "aarect.hpp"
+#include "box.hpp"
 
 #include <chrono>
 
@@ -134,6 +135,9 @@ hittable_list cornell_box() {
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
+    objects.add(make_shared<box>(point3(130, 0, 65), point3(295, 165, 230), white));
+objects.add(make_shared<box>(point3(265, 0, 295), point3(430, 330, 460), white));
+
     return objects;
 }
 
@@ -144,7 +148,7 @@ int main() {
     // Image
 
     auto aspect_ratio = 3.0 / 2.0;
-    int image_width = 1200;
+    int image_width = 400;
     //const int image_height = static_cast<int>(image_width / aspect_ratio);
     int samples_per_pixel = 50;
     const int max_depth = 50;
@@ -207,7 +211,7 @@ int main() {
             world = cornell_box();
             aspect_ratio = 1.0;
             image_width = 600;
-            samples_per_pixel = 200;
+            samples_per_pixel = 40;
             background = color(0,0,0);
             lookfrom = point3(278, 278, -800);
             lookat = point3(278, 278, 0);
