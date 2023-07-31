@@ -2,6 +2,7 @@
 # define SPHERE_HPP
 
 # include "hittable.hpp"
+# include "material.hpp"
 # include "vec3.hpp"
 
 class sphere : public hittable {
@@ -31,6 +32,8 @@ class sphere : public hittable {
 };
 
 bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+    if (rec.depth == 50 && mat_ptr->get_type() == 4)
+        return false;
     vec3 oc = r.origin() - center;
     auto a = r.direction().length_squared();
     auto half_b = dot(oc, r.direction());

@@ -2,7 +2,7 @@
 #define HITTABLE_LIST_HPP
 
 #include "hittable.hpp"
-
+#include "material.hpp"
 #include <memory>
 #include <vector>
 
@@ -31,8 +31,12 @@ bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& re
     bool hit_anything = false;
     auto closest_so_far = t_max;
 
+    temp_rec.depth = rec.depth;
+
     for (const auto& object : objects) {
         if (object->hit(r, t_min, closest_so_far, temp_rec)) {
+            // if (rec.depth == 50 && temp_rec.mat_ptr->get_type() == 4)
+            //     continue;
             hit_anything = true;
             closest_so_far = temp_rec.t;
             rec = temp_rec;

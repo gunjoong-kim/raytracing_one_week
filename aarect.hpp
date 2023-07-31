@@ -3,6 +3,7 @@
 
 # include "rtweekend.hpp"
 # include "hittable.hpp"
+# include "material.hpp"
 
 class xy_rect : public hittable {
     public:
@@ -69,6 +70,8 @@ class yz_rect : public hittable {
 };
 
 bool xy_rect::hit(const ray &r, double t_min, double t_max, hit_record &rec) const {
+    if (rec.depth == 50 && mp->get_type() == 4)
+        return false;
     auto t = (k - r.origin().z()) / r.direction().z();
     if (t < t_min || t > t_max)
         return false;
@@ -87,6 +90,8 @@ bool xy_rect::hit(const ray &r, double t_min, double t_max, hit_record &rec) con
 }
 
 bool xz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+    if (rec.depth == 50 && mp->get_type() == 4)
+        return false;
     auto t = (k-r.origin().y()) / r.direction().y();
     if (t < t_min || t > t_max)
         return false;
@@ -105,6 +110,8 @@ bool xz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) con
 }
 
 bool yz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+    if (rec.depth == 50 && mp->get_type() == 4)
+        return false;
     auto t = (k-r.origin().x()) / r.direction().x();
     if (t < t_min || t > t_max)
         return false;

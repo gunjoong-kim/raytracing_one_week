@@ -15,6 +15,8 @@
 color ray_color(const ray& r, const color &background, const hittable& world, int depth) {
     hit_record rec;
 
+    rec.depth = depth;
+
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0)
         return color(0, 0, 0);
@@ -106,6 +108,7 @@ hittable_list earth() {
     return hittable_list(globe);
 }
 
+
 hittable_list simple_light() {
     hittable_list objects;
 
@@ -115,7 +118,7 @@ hittable_list simple_light() {
 
     auto difflight = make_shared<diffuse_light>(color(4,4,4));
     objects.add(make_shared<xy_rect>(3, 5, 1, 3, -2, difflight));
-    objects.add(make_shared<sphere>(point3(0, 7, 0), 3, difflight));
+    //objects.add(make_shared<sphere>(point3(0, 10, 0), 3, difflight));
 
     return objects;
 }
@@ -164,6 +167,7 @@ int main() {
     color background(0, 0, 0);
 
     switch(0) {
+        default:
         case 1:
             world = random_scene();
             background = color(0.70, 0.80, 1.00);
@@ -205,8 +209,7 @@ int main() {
             lookat = point3(0,2,0);
             vfov = 20.0;
             break;
-        
-        default:
+
         case 6:
             world = cornell_box();
             aspect_ratio = 1.0;
@@ -220,7 +223,7 @@ int main() {
     }
 
     // BVH model
-    bvh_node real(world.objects, 0, world.objects.size(), 0.001, infinity);
+    //bvh_node real(world.objects, 0, world.objects.size(), 0.001, infinity);
 
     // Camera
     vec3 vup(0,1,0);
@@ -241,7 +244,8 @@ int main() {
                 auto v = (j + random_double()) / (image_height - 1);
                 ray r = cam.get_ray(u, v);
                 //pixel_color += ray_color(r, world, max_depth);
-                pixel_color += ray_color(r, background, real, max_depth);
+                //pixel_color += ray_color(r, background, real, max_depth);
+                pixel_color += ray_color(r, background, world, max_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }

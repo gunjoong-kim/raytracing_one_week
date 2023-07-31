@@ -8,6 +8,8 @@ struct hit_record;
 
 class material {
     public:
+        const static int type = 0;
+    public:
         virtual bool scatter(
             const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered
         ) const = 0;
@@ -15,10 +17,14 @@ class material {
         virtual color emitted(double u, double v, const point3 &p) const {
             return color(0, 0, 0);
         }
+        virtual int get_type() {
+            return type;
+        }
 };
 
 class lambertian : public material {
     public:
+        const static int type = 1;
         shared_ptr<texture> albedo;
     public:
         lambertian(const color &a) : albedo(make_shared<solid_color>(a)) {}
@@ -37,10 +43,14 @@ class lambertian : public material {
             attenuation = albedo->value(rec.u, rec.v, rec.p);
             return true;
         }
+        virtual int get_type() {
+            return type;
+        }
 };
 
 class metal : public material {
     public:
+        const static int type = 2;
         color albedo;
         double fuzz;
     
@@ -55,10 +65,14 @@ class metal : public material {
             attenuation = albedo;
             return (dot(scattered.direction(), rec.normal) > 0);
         }
+        virtual int get_type() {
+            return type;
+        }
 };
 
 class dielectric : public material {
     public:
+        const static int type = 3;
         double ir;
 
     public:
@@ -85,6 +99,9 @@ class dielectric : public material {
             scattered = ray(rec.p, direction);
             return true;
         }
+        virtual int get_type() {
+            return type;
+        }
     
     private:
         static double reflectance(double cosine, double ref_idx) {
@@ -97,6 +114,7 @@ class dielectric : public material {
 
 class diffuse_light : public material {
     public:
+        const static int type = 4;
         shared_ptr<texture> emit;
     
     public:
@@ -111,6 +129,9 @@ class diffuse_light : public material {
 
         virtual color emitted(double u, double v, const point3 &p) const override {
             return emit->value(u, v, p);
+        }
+        virtual int get_type() {
+            return type;
         }
 };
 
